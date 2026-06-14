@@ -1,0 +1,23 @@
+<%- include('partials/header', { pageTitle: '답글 작성' }) %>
+
+<div class="container" style="max-width: 700px;">
+    <h2>💬 답글 작성</h2>
+    <div style="background:#f9f9f9; padding: 10px; border-radius: 5px; margin-bottom: 14px;">
+        📄 원글 제목: <strong><%= parentTitle %></strong>
+    </div>
+    <p style="color:#666;">작성자: <strong><%= user ? user.username : '익명' %></strong></p>
+
+    <form action="board/create" method="POST">
+        <input type="hidden" name="parent_id" value="<%= parentId %>">
+        <label for="title">제목 <span style="color:red;">*</span></label>
+        <input type="text" id="title" name="title" value="RE: <%= parentTitle %>" required>
+        <label for="content">내용 <span style="color:red;">*</span></label>
+        <textarea id="content" name="content" required></textarea>
+        <div style="display: flex; gap: 10px;">
+            <button type="submit">답글 등록</button>
+            <a href="board" class="btn btn-secondary">취소</a>
+        </div>
+    </form>
+</div>
+
+<%- include('partials/footer') %>

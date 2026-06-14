@@ -1,0 +1,67 @@
+<%- include('partials/header', { pageTitle: '회원정보 입력' }) %>
+
+<div class="container" style="max-width: 600px;">
+    <h2>📝 회원가입 - 3/3 단계</h2>
+
+    <div style="display:flex; gap:6px; margin: 14px 0;">
+        <div style="flex:1; padding:8px; background:#22c55e; color:white; text-align:center; border-radius:5px; font-size:12px;">✓ 가입여부 확인</div>
+        <div style="flex:1; padding:8px; background:#22c55e; color:white; text-align:center; border-radius:5px; font-size:12px;">✓ 약관 동의</div>
+        <div style="flex:1; padding:8px; background:#2563eb; color:white; text-align:center; border-radius:5px; font-size:12px;">③ 정보 입력</div>
+    </div>
+
+    <% if (error) { %><div class="error-msg"><%= error %></div><% } %>
+
+    <p style="color:#666; font-size:13px;"><span style="color:red;">*</span> 표시는 필수 항목입니다.</p>
+
+    <form action="user/register" method="post">
+        <h3 style="border-bottom:1px solid #eee; padding-bottom:6px;">필수 정보</h3>
+
+        <label>아이디 (변경 불가)</label>
+        <input type="text" value="<%= username %>" disabled style="background:#f3f4f6; color:#888;">
+
+        <label for="password">비밀번호 <span style="color:red;">*</span></label>
+        <input type="password" id="password" name="password" placeholder="4자 이상" required>
+
+        <label for="password_confirm">비밀번호 확인 <span style="color:red;">*</span></label>
+        <input type="password" id="password_confirm" name="password_confirm" required>
+
+        <label for="name">이름 <span style="color:red;">*</span></label>
+        <input type="text" id="name" name="name" required>
+
+        <h3 style="border-bottom:1px solid #eee; padding-bottom:6px; margin-top:20px;">추가 정보 (선택)</h3>
+
+        <label for="email">이메일</label>
+        <input type="email" id="email" name="email">
+
+        <label for="phone">연락처</label>
+        <input type="text" id="phone" name="phone" placeholder="010-1234-5678">
+
+        <label for="gender">성별</label>
+        <select id="gender" name="gender">
+            <option value="">선택 안 함</option>
+            <option value="남">남</option>
+            <option value="여">여</option>
+        </select>
+
+        <label for="birth">생년월일</label>
+        <input type="text" id="birth" name="birth" placeholder="YYYYMMDD">
+
+        <label for="address">주소</label>
+        <input type="text" id="address" name="address">
+
+        <h3 style="border-bottom:1px solid #eee; padding-bottom:6px; margin-top:20px;">수신 동의 (선택)</h3>
+        <label style="font-weight:normal; display:block; margin:6px 0;">
+            <input type="checkbox" name="sms_agree" value="1"> SMS 수신 동의
+        </label>
+        <label style="font-weight:normal; display:block; margin:6px 0;">
+            <input type="checkbox" name="email_agree" value="1"> 이메일 수신 동의
+        </label>
+
+        <div style="display: flex; gap: 10px; margin-top: 20px;">
+            <a href="user/terms" class="btn btn-secondary" style="flex:1; text-align:center;">← 이전</a>
+            <button type="submit" class="btn btn-success" style="flex:1;">가입 완료</button>
+        </div>
+    </form>
+</div>
+
+<%- include('partials/footer') %>

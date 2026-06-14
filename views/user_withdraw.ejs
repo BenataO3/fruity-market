@@ -1,0 +1,35 @@
+<%- include('partials/header', { pageTitle: '회원 탈퇴' }) %>
+
+<div class="container" style="max-width: 500px;">
+    <h2>😢 회원 탈퇴</h2>
+    <% if (error) { %><div class="error-msg"><%= error %></div><% } %>
+
+    <div style="background:#fef2f2; padding: 12px; border-radius: 6px; border-left: 4px solid #ef4444; margin: 14px 0;">
+        <strong style="color:#991b1b;">⚠️ 탈퇴 전 확인사항</strong>
+        <ul style="margin: 8px 0 0; padding-left: 20px; color:#7f1d1d; font-size: 13px;">
+            <li>탈퇴 시 모든 회원 정보가 영구 삭제됩니다.</li>
+            <li>장바구니, 위시리스트가 함께 삭제됩니다.</li>
+            <li>동일한 아이디로 즉시 재가입할 수 있습니다.</li>
+            <li>탈퇴 후에는 되돌릴 수 없습니다.</li>
+        </ul>
+    </div>
+
+    <form action="user/withdraw" method="POST">
+        <label for="password">현재 비밀번호 <span style="color:red;">*</span></label>
+        <input type="password" id="password" name="password" required>
+
+        <label for="confirm_text">확인 문구 <span style="color:red;">*</span></label>
+        <input type="text" id="confirm_text" name="confirm_text" placeholder='"탈퇴합니다"를 정확히 입력' required>
+
+        <div style="display: flex; gap: 10px; margin-top: 16px;">
+            <button type="submit" class="btn btn-danger"
+                    style="flex:1;"
+                    onclick="return confirm('정말로 탈퇴하시겠습니까? 되돌릴 수 없습니다.');">
+                회원 탈퇴
+            </button>
+            <a href="user/mypage" class="btn btn-secondary" style="flex:1; text-align:center;">취소</a>
+        </div>
+    </form>
+</div>
+
+<%- include('partials/footer') %>

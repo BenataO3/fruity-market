@@ -1,0 +1,24 @@
+<%- include('partials/header', { pageTitle: '로그인' }) %>
+
+<div class="container" style="max-width: 400px;">
+    <h2>🔐 로그인</h2>
+    <% if (error) { %><div class="error-msg"><%= error %></div><% } %>
+
+    <form action="user/login" method="post">
+        <label for="username">아이디</label>
+        <input type="text" id="username" name="username" required>
+        <label for="password">비밀번호</label>
+        <input type="password" id="password" name="password" required>
+        <button type="submit" style="width:100%;">로그인</button>
+    </form>
+
+    <div style="margin-top: 20px; text-align: center; font-size: 14px;">
+        <a href="user/find">아이디/비밀번호 찾기</a> · 
+        <a href="user/check">회원가입</a>
+    </div>
+    <p style="margin-top: 14px; text-align: center; font-size: 12px; color: #888;">
+        🛈 테스트 계정: admin / admin1234
+    </p>
+</div>
+
+<%- include('partials/footer') %>

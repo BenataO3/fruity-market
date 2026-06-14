@@ -1,0 +1,18 @@
+<%- include('partials/header', { pageTitle: '가입 완료' }) %>
+<div class="container" style="max-width: 500px; text-align: center;">
+    <div style="font-size: 48px;">🎉</div>
+    <h2>회원가입이 완료되었습니다!</h2>
+    <div class="success-msg" style="text-align:left;">
+        <strong><%= name %></strong>님, 환영합니다!<br>
+        아이디: <strong><%= username %></strong>
+    </div>
+    <p style="color:#666; margin: 20px 0;">
+        이제 로그인하여 다양한 상품을 만나보세요.<br>
+        🍎 🍌 🍇 🍊 🥝 🍑 🍋 🍉
+    </p>
+    <div style="display: flex; gap: 10px; justify-content: center;">
+        <a href="user/login" class="btn btn-success">🔑 로그인</a>
+        <a href="./" class="btn btn-secondary">🏠 홈으로</a>
+    </div>
+</div>
+<%- include('partials/footer') %>

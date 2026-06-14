@@ -1,0 +1,65 @@
+<%- include('partials/header', { pageTitle: '약관 동의' }) %>
+
+<div class="container" style="max-width: 700px;">
+    <h2>📝 회원가입 - 2/3 단계</h2>
+
+    <div style="display:flex; gap:6px; margin: 14px 0;">
+        <div style="flex:1; padding:8px; background:#22c55e; color:white; text-align:center; border-radius:5px; font-size:12px;">✓ 가입여부 확인</div>
+        <div style="flex:1; padding:8px; background:#2563eb; color:white; text-align:center; border-radius:5px; font-size:12px;">② 약관 동의</div>
+        <div style="flex:1; padding:8px; background:#e5e7eb; color:#888; text-align:center; border-radius:5px; font-size:12px;">③ 정보 입력</div>
+    </div>
+
+    <% if (error) { %><div class="error-msg"><%= error %></div><% } %>
+
+    <form action="user/terms" method="POST">
+        <div style="border:1px solid #ddd; border-radius:6px; padding:12px; margin-bottom:12px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                <strong>📄 서비스 이용약관 (필수)</strong>
+                <label style="font-weight:normal;">
+                    <input type="checkbox" name="agree_service" value="1"> 동의
+                </label>
+            </div>
+            <div style="height:110px; overflow-y:auto; padding:10px; background:#f9f9f9; border-radius:4px; font-size:12px; line-height:1.6;">
+                제1조 (목적) 본 약관은 회원이 본 쇼핑몰이 제공하는 서비스를 이용함에 있어 회원과 쇼핑몰의 권리·의무 및 책임사항을 규정함을 목적으로 합니다.<br><br>
+                제2조 (정의) "이용자"란 본 사이트에 접속하여 본 약관에 따라 서비스를 받는 회원 및 비회원을 말합니다.<br><br>
+                제3조 (서비스의 제공) 회사는 회원에게 상품 정보의 제공, 구매계약의 체결, 상품의 배송 등의 서비스를 제공합니다.
+            </div>
+        </div>
+
+        <div style="border:1px solid #ddd; border-radius:6px; padding:12px; margin-bottom:12px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                <strong>🔒 개인정보 처리방침 (필수)</strong>
+                <label style="font-weight:normal;">
+                    <input type="checkbox" name="agree_privacy" value="1"> 동의
+                </label>
+            </div>
+            <div style="height:110px; overflow-y:auto; padding:10px; background:#f9f9f9; border-radius:4px; font-size:12px; line-height:1.6;">
+                1. 개인정보의 수집·이용 목적: 회원 가입 및 관리, 상품 구매 및 배송, 고객 문의 응대<br><br>
+                2. 수집 항목<br>
+                - 필수: 아이디, 비밀번호, 이름<br>
+                - 선택: 이메일, 연락처, 성별, 생년월일, 주소<br><br>
+                3. 보유 기간: 회원 탈퇴 시까지 보관 (관련 법령에 따라 일부 정보는 보관될 수 있음)
+            </div>
+        </div>
+
+        <div style="background:#f3f4f6; padding:10px; border-radius:5px; margin: 14px 0; text-align:center;">
+            <label style="font-weight:bold;">
+                <input type="checkbox" id="agree_all" onclick="toggleAll(this)"> 전체 동의
+            </label>
+        </div>
+
+        <div style="display:flex; gap:10px;">
+            <a href="user/check" class="btn btn-secondary" style="flex:1; text-align:center;">← 이전</a>
+            <button type="submit" style="flex:1;">다음 →</button>
+        </div>
+    </form>
+</div>
+
+<script>
+function toggleAll(c) {
+    document.getElementsByName('agree_service')[0].checked = c.checked;
+    document.getElementsByName('agree_privacy')[0].checked = c.checked;
+}
+</script>
+
+<%- include('partials/footer') %>

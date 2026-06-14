@@ -1,0 +1,50 @@
+<%- include('partials/header', { pageTitle: post.title }) %>
+
+<div class="container" style="max-width: 800px;">
+    <h2><%= post.title %></h2>
+    <div class="post-meta">
+        작성일: <strong><%= post.created_at %></strong>
+        | 작성자: <%= post.author %>
+        | 조회수: <%= post.views || 0 %>
+    </div>
+    <div class="post-content"><%= post.content %></div>
+
+    <% if (files && files.length > 0) { %>
+        <div class="file-list">
+            <strong>📎 첨부파일</strong>
+            <ul style="margin: 6px 0 0; padding-left: 18px;">
+                <% files.forEach(f => { %>
+                    <li>
+                        <a href="<%= f.filepath %>" download="<%= f.originalname %>">
+                            📄 <%= f.originalname %>
+                        </a>
+                        <span style="color:#888; font-size:12px;">(<%= (f.filesize/1024).toFixed(1) %> KB)</span>
+                    </li>
+                <% }) %>
+            </ul>
+        </div>
+    <% } %>
+
+    <div class="post-actions">
+        <a href="notice" class="btn btn-secondary">📋 목록</a>
+        <% if (user && user.username === 'admin') { %>
+            <a href="notice/edit/<%= post.id %>" class="btn">✏️ 수정</a>
+            <a href="notice/delete/<%= post.id %>" 
+               onclick="return confirm('정말 삭제하시겠습니까?');"
+               class="btn btn-danger">🗑 삭제</a>
+        <% } %>
+    </div>
+
+    <div class="nav-prev-next">
+        <div><strong>▲ 이전글: </strong>
+            <% if (prev) { %><a href="notice/view/<%= prev.id %>"><%= prev.title %></a>
+            <% } else { %><span style="color:#aaa;">이전글이 없습니다.</span><% } %>
+        </div>
+        <div><strong>▼ 다음글: </strong>
+            <% if (next) { %><a href="notice/view/<%= next.id %>"><%= next.title %></a>
+            <% } else { %><span style="color:#aaa;">다음글이 없습니다.</span><% } %>
+        </div>
+    </div>
+</div>
+
+<%- include('partials/footer') %>

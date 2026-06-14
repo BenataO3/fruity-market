@@ -1,0 +1,64 @@
+<%
+// 현재 URL 경로 기반으로 active 메뉴 판별
+const _path = typeof currentPath !== 'undefined' ? currentPath : '';
+function isActive(prefix) {
+    if (prefix === '/' && _path === '/') return true;
+    if (prefix !== '/' && _path.indexOf(prefix) === 0) return true;
+    return false;
+}
+%>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <!-- 서브경로(/studX/) 배포에서도 상대경로가 올바르게 동작하도록 기준 경로 지정 -->
+    <base href="<%= typeof baseHref !== 'undefined' ? baseHref : './' %>">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= typeof pageTitle !== 'undefined' ? pageTitle : 'FRUITY MARKET' %></title>
+    <link rel="stylesheet" href="stylesheets/style.css">
+</head>
+<body>
+
+<!-- 상단 로그인/회원가입 바 -->
+<div class="top-bar">
+    <% if (!user) { %>
+        <a href="user/login" class="btn-login">LOGIN</a>
+        <a href="user/check" class="btn-register">JOIN</a>
+    <% } else { %>
+        <span class="welcome-text"><%= user.name %>님 환영합니다</span>
+        <% if (user.username === 'admin') { %>
+            <a href="admin" class="btn-admin">ADMIN</a>
+        <% } %>
+        <a href="user/mypage" class="btn-mypage">MY</a>
+        <a href="user/logout" class="btn-logout">LOGOUT</a>
+    <% } %>
+</div>
+
+<!-- 메인 헤더 -->
+<header>
+    <h1>
+        <a href="./">FRUITY MARKET</a>
+    </h1>
+    <nav>
+        <a href="./" class="<%= isActive('/') ? 'active' : '' %>">홈</a>
+
+        <!-- 상품목록 드롭다운 -->
+        <div class="nav-dropdown">
+            <a href="products" class="<%= isActive('/products') ? 'active' : '' %>">상품목록 ▾</a>
+            <div class="dropdown-menu">
+                <a href="products/all?category=all">🛒 전체 상품</a>
+                <a href="products/all?category=fruit">🍎 단품 과일</a>
+                <a href="products/all?category=box">📦 과일 상자</a>
+                <a href="products/all?category=gift">🎁 프리미엄 선물 세트</a>
+                <a href="products/all?category=dessert">🍰 과일 디저트 & 가공품</a>
+                <a href="products/all?category=small">👤 1인 가구 / 실속 팩</a>
+            </div>
+        </div>
+
+        <a href="wishlist" class="<%= isActive('/wishlist') ? 'active' : '' %>">위시리스트</a>
+        <a href="cart" class="<%= isActive('/cart') ? 'active' : '' %>">장바구니</a>
+        <a href="order/list" class="<%= isActive('/order') ? 'active' : '' %>">주문내역</a>
+        <a href="notice" class="<%= isActive('/notice') ? 'active' : '' %>">공지사항</a>
+        <a href="board" class="<%= isActive('/board') ? 'active' : '' %>">고객센터</a>
+    </nav>
+</header>

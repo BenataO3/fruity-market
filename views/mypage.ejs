@@ -1,0 +1,53 @@
+<%- include('partials/header', { pageTitle: '마이페이지' }) %>
+
+<div class="container">
+    <h2>👤 마이페이지</h2>
+
+    <div class="dashboard-grid">
+        <a href="order/list" class="dashboard-card" style="background:#dbeafe;">
+            <div class="dashboard-num"><%= stats.orderCount %></div>
+            <div class="dashboard-label">📦 총 주문</div>
+        </a>
+        <div class="dashboard-card" style="background:#fef3c7;">
+            <div class="dashboard-num">₩<%= stats.totalSpent.toLocaleString() %></div>
+            <div class="dashboard-label">💰 총 결제금액</div>
+        </div>
+        <a href="cart" class="dashboard-card" style="background:#dcfce7;">
+            <div class="dashboard-num"><%= stats.cartCount %></div>
+            <div class="dashboard-label">🛒 장바구니</div>
+        </a>
+        <a href="wishlist" class="dashboard-card" style="background:#fce7f3;">
+            <div class="dashboard-num"><%= stats.wishCount %></div>
+            <div class="dashboard-label">❤️ 위시리스트</div>
+        </a>
+        <a href="board?mine=1" class="dashboard-card" style="background:#e0e7ff;">
+            <div class="dashboard-num"><%= stats.postCount %></div>
+            <div class="dashboard-label">💬 내 문의글</div>
+        </a>
+    </div>
+
+    <h3 style="margin-top:30px;">📋 내 정보</h3>
+    <table class="board-table">
+        <tr><th style="width: 140px;">아이디</th><td><%= userInfo.username %></td></tr>
+        <tr><th>이름</th><td><%= userInfo.name %></td></tr>
+        <tr><th>이메일</th><td><%= userInfo.email || '-' %></td></tr>
+        <tr><th>연락처</th><td><%= userInfo.phone || '-' %></td></tr>
+        <tr><th>성별</th><td><%= userInfo.gender || '-' %></td></tr>
+        <tr><th>생년월일</th><td><%= userInfo.birth || '-' %></td></tr>
+        <tr><th>주소</th><td><%= userInfo.address || '-' %></td></tr>
+        <tr><th>SMS 수신</th><td><%= userInfo.sms_agree ? '✅ 동의' : '❌ 거부' %></td></tr>
+        <tr><th>이메일 수신</th><td><%= userInfo.email_agree ? '✅ 동의' : '❌ 거부' %></td></tr>
+        <tr><th>가입일</th><td><%= userInfo.created_at %></td></tr>
+    </table>
+
+    <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-top: 20px;">
+        <a href="user/edit" class="btn">⚙️ 회원정보 수정</a>
+        <a href="order/list" class="btn btn-secondary">📦 주문내역</a>
+        <a href="cart" class="btn btn-success">🛒 장바구니</a>
+        <a href="wishlist" class="btn" style="background:#ec4899;">❤️ 위시리스트</a>
+        <a href="board?mine=1" class="btn" style="background:#7c3aed;">💬 내 문의글</a>
+        <a href="user/withdraw" class="btn btn-danger">😢 회원탈퇴</a>
+    </div>
+</div>
+
+<%- include('partials/footer') %>

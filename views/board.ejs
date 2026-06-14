@@ -1,0 +1,85 @@
+<%- include('partials/header', { pageTitle: '고객센터 게시판' }) %>
+
+<div class="container">
+    <h2>💬 고객센터 - 문의 게시판</h2>
+
+    <form method="GET" action="board" class="search-bar">
+        <input type="text" name="q" value="<%= keyword %>" 
+               placeholder="🔍 제목 또는 내용으로 검색" style="flex:1; margin:0;">
+        <% if (user) { %>
+            <label style="margin:0; display:flex; align-items:center; gap:6px; font-weight:normal;">
+                <input type="checkbox" name="mine" value="1" <%= onlyMine ? 'checked' : '' %>>
+                내 글만
+            </label>
+        <% } %>
+        <button type="submit" style="margin:0;">검색</button>
+        <% if (keyword || onlyMine) { %>
+            <a href="board" class="btn btn-secondary">초기화</a>
+        <% } %>
+    </form>
+
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+        <p style="color:#666; margin:0;">
+            <% if (keyword) { %>"<strong><%= keyword %></strong>" 검색 결과: <% } %>
+            <% if (onlyMine) { %>(내 글만) <% } %>
+            총 <strong><%= posts.length %></strong>개
+        </p>
+        <a href="board/new" class="btn btn-success">✏️ 글쓰기</a>
+    </div>
+
+    <table class="board-table">
+        <thead>
+            <tr>
+                <th class="col-num">번호</th>
+                <th>제목</th>
+                <th class="col-author">작성자</th>
+                <th class="col-views">조회수</th>
+                <th class="col-date">작성일</th>
+                <th style="width:120px; text-align:center;">관리</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% if (posts.length === 0) { %>
+                <tr><td colspan="6" style="text-align:center; padding: 30px;">등록된 게시글이 없습니다.</td></tr>
+            <% } %>
+            <% posts.forEach((post, idx) => { %>
+                <% const isAuthor = user && user.username === post.author; %>
+                <% const isAdmin = user && user.username === 'admin'; %>
+                <% const isAnon = post.author === '익명'; %>
+                <tr>
+                    <td class="col-num"><%= idx + 1 %></td>
+                    <td style="padding-left: <%= post.parent_id ? '30px' : '8px' %>;">
+                        <% if (post.parent_id) { %>
+                            <span class="reply-mark">↳ [답글]</span>
+                        <% } %>
+                        <a href="board/view/<%= post.id %>"><%= post.title %></a>
+                    </td>
+                    <td><%= post.author %></td>
+                    <td class="col-views"><%= post.views || 0 %></td>
+                    <td class="col-date"><%= post.created_at ? post.created_at.substring(0, 10) : '' %></td>
+                    <td style="text-align:center;">
+                        <% if (isAuthor) { %>
+                            <a href="board/edit/<%= post.id %>" style="color:#2563eb;">수정</a>
+                        <% } else { %>
+                            <span class="disabled">수정</span>
+                        <% } %>
+                         / 
+                        <% if (isAuthor || (isAnon && isAdmin)) { %>
+                            <a href="board/delete/<%= post.id %>" 
+                               onclick="return confirm('정말 삭제하시겠습니까?');"
+                               style="color:#ef4444;">삭제</a>
+                        <% } else { %>
+                            <span class="disabled">삭제</span>
+                        <% } %>
+                    </td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+
+    <p style="margin-top: 14px; font-size: 12px; color: #888;">
+        ℹ️ 본인이 작성한 글만 수정/삭제할 수 있습니다. 익명 글은 관리자(admin)만 삭제 가능합니다.
+    </p>
+</div>
+
+<%- include('partials/footer') %>

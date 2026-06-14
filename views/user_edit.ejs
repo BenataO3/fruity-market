@@ -1,0 +1,68 @@
+<%- include('partials/header', { pageTitle: '회원정보 수정' }) %>
+
+<div class="container" style="max-width: 600px;">
+    <h2>⚙️ 회원정보 수정</h2>
+    <% if (error) { %><div class="error-msg"><%= error %></div><% } %>
+    <% if (success) { %><div class="success-msg">✅ <%= success %></div><% } %>
+
+    <form action="user/edit" method="POST">
+        <h3 style="border-bottom:1px solid #eee; padding-bottom:6px;">기본 정보</h3>
+
+        <label>아이디 (변경 불가)</label>
+        <input type="text" value="<%= userInfo.username %>" disabled style="background:#f3f4f6; color:#888;">
+
+        <label for="name">이름 <span style="color:red;">*</span></label>
+        <input type="text" id="name" name="name" value="<%= userInfo.name %>" required>
+
+        <label for="email">이메일</label>
+        <input type="email" id="email" name="email" value="<%= userInfo.email || '' %>">
+
+        <label for="phone">연락처</label>
+        <input type="text" id="phone" name="phone" value="<%= userInfo.phone || '' %>" placeholder="010-1234-5678">
+
+        <label for="gender">성별</label>
+        <select id="gender" name="gender">
+            <option value="">선택 안 함</option>
+            <option value="남" <%= userInfo.gender === '남' ? 'selected' : '' %>>남</option>
+            <option value="여" <%= userInfo.gender === '여' ? 'selected' : '' %>>여</option>
+        </select>
+
+        <label for="birth">생년월일</label>
+        <input type="text" id="birth" name="birth" value="<%= userInfo.birth || '' %>" placeholder="YYYYMMDD">
+
+        <label for="address">주소</label>
+        <input type="text" id="address" name="address" value="<%= userInfo.address || '' %>">
+
+        <h3 style="border-bottom:1px solid #eee; padding-bottom:6px; margin-top:20px;">수신 동의</h3>
+        <label style="font-weight:normal; display:block; margin:6px 0;">
+            <input type="checkbox" name="sms_agree" value="1" <%= userInfo.sms_agree ? 'checked' : '' %>> SMS 수신 동의
+        </label>
+        <label style="font-weight:normal; display:block; margin:6px 0;">
+            <input type="checkbox" name="email_agree" value="1" <%= userInfo.email_agree ? 'checked' : '' %>> 이메일 수신 동의
+        </label>
+
+        <h3 style="border-bottom:1px solid #eee; padding-bottom:6px; margin-top:20px;">🔑 비밀번호 변경 (선택)</h3>
+        <p style="color:#888; font-size:12px;">비밀번호 변경 시에만 입력하세요.</p>
+
+        <label for="current_password">현재 비밀번호</label>
+        <input type="password" id="current_password" name="current_password">
+
+        <label for="new_password">새 비밀번호</label>
+        <input type="password" id="new_password" name="new_password">
+
+        <label for="new_password_confirm">새 비밀번호 확인</label>
+        <input type="password" id="new_password_confirm" name="new_password_confirm">
+
+        <div style="display: flex; gap: 10px; margin-top: 20px;">
+            <button type="submit" class="btn btn-success" style="flex:1;">변경 사항 저장</button>
+            <a href="user/mypage" class="btn btn-secondary" style="flex:1; text-align:center;">취소</a>
+        </div>
+    </form>
+
+    <hr style="margin: 30px 0;">
+    <div style="text-align: center;">
+        <a href="user/withdraw" style="color:#ef4444; font-size:13px;">회원 탈퇴를 원하시나요?</a>
+    </div>
+</div>
+
+<%- include('partials/footer') %>

@@ -1,0 +1,58 @@
+<%- include('partials/header', { pageTitle: '상품 목록 - FRUITY MARKET' }) %>
+
+<div class="container">
+    <% if (!user) { %>
+        <div style="background:#fef3c7; color:#92400e; padding:10px; border-radius:6px; margin-bottom:14px;">
+            🔴 로그인 후 장바구니/위시리스트를 사용할 수 있습니다.
+        </div>
+    <% } %>
+
+    <h2 style="border:none; padding:0;">🍎 오늘의 추천 상품</h2>
+    <p style="color:#666;">현재 등록된 상품 수: <%= allProducts.length %>개 · 
+        <a href="products/all" style="color:#2563eb;">전체 목록 보기 →</a>
+    </p>
+
+    <!-- 카테고리 칩 -->
+    <div class="category-chips">
+        <% Object.entries(categories).forEach(([key, c]) => { %>
+            <a href="products/all?category=<%= key %>"><%= c.emoji %> <%= c.label %></a>
+        <% }) %>
+    </div>
+
+    <section>
+        <div class="product-grid">
+            <% featuredProducts.forEach(product => { %>
+                <% const isWished = wishSet.has(product.id); %>
+                <div class="product-card featured-card">
+                    <a href="products/detail/<%= product.id %>" class="card-link">
+                        <div class="img-wrap">
+                            <img src="<%= product.image %>" alt="<%= product.name %>"
+                                 onerror="this.src='images/default.png';">
+                        </div>
+                        <h3><%= product.emoji %> <%= product.name %></h3>
+                        <div class="price-row" style="display:flex; justify-content:space-between; align-items:baseline; margin-top:6px;">
+                            <strong>₩<%= product.price.toLocaleString() %></strong>
+                            <span style="background:#FFE066; color:#111; padding:2px 8px; font-size:10px; border-radius:2px; letter-spacing:0.5px;">BEST</span>
+                        </div>
+                    </a>
+                    <div class="action-row">
+                        <form action="cart/add" method="POST" style="flex:1;">
+                            <input type="hidden" name="productId" value="<%= product.id %>">
+                            <button type="submit" class="cart-button">🛒 담기</button>
+                        </form>
+                        <form action="wishlist/toggle" method="POST">
+                            <input type="hidden" name="productId" value="<%= product.id %>">
+                            <button type="submit"
+                                    class="heart-btn <%= isWished ? 'active' : '' %>"
+                                    title="<%= isWished ? '위시리스트에서 제거' : '위시리스트에 담기' %>">
+                                <span class="heart-icon">❤️</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            <% }) %>
+        </div>
+    </section>
+</div>
+
+<%- include('partials/footer') %>

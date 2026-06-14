@@ -1,0 +1,67 @@
+<%- include('partials/header', { pageTitle: '상품 관리' }) %>
+
+<div class="container">
+    <h2>🍎 상품 관리</h2>
+
+    <div class="admin-tabs">
+        <a href="admin">📊 대시보드</a>
+        <a href="admin/orders">📦 주문/배송 관리</a>
+        <a href="admin/products" class="active">🍎 상품 관리</a>
+    </div>
+
+    <% if (msg === 'price_ok') { %>
+        <div class="success-msg">✅ 가격이 변경되었습니다.</div>
+    <% } else if (msg === 'invalid_price') { %>
+        <div class="error-msg">⚠️ 유효한 가격을 입력해 주세요.</div>
+    <% } else if (msg === 'featured') { %>
+        <div class="success-msg">⭐ 추천 상품으로 지정되었습니다.</div>
+    <% } else if (msg === 'unfeatured') { %>
+        <div class="success-msg">⭐ 추천 해제되었습니다.</div>
+    <% } else if (msg === 'max_featured') { %>
+        <div class="error-msg">⚠️ 추천 상품은 최대 4개까지만 지정할 수 있습니다. 다른 상품을 먼저 해제하세요.</div>
+    <% } %>
+
+    <div style="background:#fef3c7; padding:14px; border-radius:8px; margin: 14px 0; border-left:4px solid #f59e0b;">
+        <strong style="color:#92400e;">⭐ 오늘의 추천 (<%= featuredCount %>/4)</strong>
+        <p style="color:#78350f; font-size:13px; margin:6px 0 0;">
+            상품 이미지 우상단의 <strong>별(☆)</strong> 버튼을 클릭하면 추천에 등록/해제됩니다. 
+            최대 4개까지 등록 가능합니다. 등록된 상품은 메인 페이지와 상품 목록 상단에 노출됩니다.
+        </p>
+    </div>
+
+    <div class="product-grid">
+        <% products.forEach(p => { %>
+            <div class="product-card">
+                <div class="img-wrap">
+                    <img src="<%= p.image %>" alt="<%= p.name %>"
+                         onerror="this.src='images/default.png';">
+                    <% if (p.is_featured === 1) { %>
+                        <span class="featured-badge">★ 추천</span>
+                    <% } %>
+                    <form action="admin/products/featured/<%= p.id %>" method="POST" style="margin:0;">
+                        <button type="submit" 
+                                class="star-toggle <%= p.is_featured === 1 ? 'featured' : '' %>"
+                                title="<%= p.is_featured === 1 ? '추천 해제' : '추천 등록' %>">
+                            <%= p.is_featured === 1 ? '★' : '☆' %>
+                        </button>
+                    </form>
+                </div>
+                <h3><%= p.emoji %> <%= p.name %></h3>
+                <p style="font-size:12px;"><%= p.description.substring(0, 50) %>...</p>
+
+                <!-- 가격 수정 폼 -->
+                <form action="admin/products/price/<%= p.id %>" method="POST" 
+                      style="display:flex; gap:4px; margin-top:8px;">
+                    <input type="number" name="price" value="<%= p.price %>" 
+                           min="0" style="flex:1; margin:0; padding:6px; font-size:13px;">
+                    <button type="submit" style="margin:0; padding:6px 10px; font-size:13px;">변경</button>
+                </form>
+                <p style="font-size:11px; color:#888; margin: 4px 0 0; text-align:left;">
+                    현재 가격: ₩<%= p.price.toLocaleString() %>
+                </p>
+            </div>
+        <% }) %>
+    </div>
+</div>
+
+<%- include('partials/footer') %>

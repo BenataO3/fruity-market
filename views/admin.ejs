@@ -1,0 +1,40 @@
+<%- include('partials/header', { pageTitle: '관리자 대시보드' }) %>
+
+<div class="container">
+    <h2>🔧 관리자 대시보드</h2>
+
+    <div class="admin-tabs">
+        <a href="admin" class="active">📊 대시보드</a>
+        <a href="admin/orders">📦 주문/배송 관리</a>
+        <a href="admin/products">🍎 상품 관리</a>
+    </div>
+
+    <div class="dashboard-grid">
+        <a href="admin/orders" class="dashboard-card" style="background:#dbeafe;">
+            <div class="dashboard-num"><%= stats.orderCount %></div>
+            <div class="dashboard-label">📦 전체 주문</div>
+        </a>
+        <a href="admin/products" class="dashboard-card" style="background:#dcfce7;">
+            <div class="dashboard-num"><%= stats.productCount %></div>
+            <div class="dashboard-label">🍎 등록 상품</div>
+        </a>
+        <div class="dashboard-card" style="background:#fef3c7;">
+            <div class="dashboard-num"><%= stats.featuredCount %>/4</div>
+            <div class="dashboard-label">⭐ 오늘의 추천</div>
+        </div>
+        <div class="dashboard-card" style="background:#fce7f3;">
+            <div class="dashboard-num"><%= stats.userCount %></div>
+            <div class="dashboard-label">👥 회원 수</div>
+        </div>
+    </div>
+
+    <div style="margin-top: 30px; padding: 20px; background:#f9fafb; border-radius: 10px;">
+        <h3>📋 관리 기능 안내</h3>
+        <ul style="line-height: 1.9; color:#374151;">
+            <li><strong>📦 주문/배송 관리</strong> — 회원들의 주문 상태(주문완료/배송준비/배송중/배송완료/반품)를 변경할 수 있습니다.</li>
+            <li><strong>🍎 상품 관리</strong> — 상품 가격을 수정하고, "오늘의 추천 과일"(최대 4개)을 별 버튼으로 지정할 수 있습니다.</li>
+        </ul>
+    </div>
+</div>
+
+<%- include('partials/footer') %>
