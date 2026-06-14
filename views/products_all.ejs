@@ -55,7 +55,7 @@
                 <div class="product-card featured-card">
                     <a href="products/detail/<%= p.id %>" class="card-link">
                         <div class="img-wrap">
-                            <img src="<%= p.image %>" alt="<%= p.name %>"
+                            <img src="<%= p.image.replace(/^\//, '') %>" alt="<%= p.name %>"
                                  onerror="this.src='images/default.png';">
                             <% if (p.is_featured === 1) { %>
                                 <span class="featured-badge">★ 추천</span>
@@ -94,7 +94,7 @@
                 if (keyword) params.set('q', keyword);
                 if (sort && sort !== 'default') params.set('sort', sort);
                 params.set('page', p);
-                return '/products/all?' + params.toString();
+                return 'products/all?' + params.toString();
             }
             const cur = pagination.currentPage;
             const tot = pagination.totalPages;

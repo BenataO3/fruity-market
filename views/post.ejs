@@ -10,7 +10,7 @@
         <% } %>
     </p>
 
-    <form action="<%= post ? '/board/edit/' + post.id : '/board/new' %>" method="post">
+    <form action="<%= post ? 'board/edit/' + post.id : 'board/new' %>" method="post">
         <% if (typeof parentId !== 'undefined' && parentId) { %>
             <input type="hidden" name="parent_id" value="<%= parentId %>">
         <% } %>

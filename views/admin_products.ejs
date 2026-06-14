@@ -33,7 +33,7 @@
         <% products.forEach(p => { %>
             <div class="product-card">
                 <div class="img-wrap">
-                    <img src="<%= p.image %>" alt="<%= p.name %>"
+                    <img src="<%= p.image.replace(/^\//, '') %>" alt="<%= p.name %>"
                          onerror="this.src='images/default.png';">
                     <% if (p.is_featured === 1) { %>
                         <span class="featured-badge">★ 추천</span>

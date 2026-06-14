@@ -26,7 +26,7 @@
                 <div class="product-card featured-card">
                     <a href="products/detail/<%= product.id %>" class="card-link">
                         <div class="img-wrap">
-                            <img src="<%= product.image %>" alt="<%= product.name %>"
+                            <img src="<%= product.image.replace(/^\//, '') %>" alt="<%= product.name %>"
                                  onerror="this.src='images/default.png';">
                         </div>
                         <h3><%= product.emoji %> <%= product.name %></h3>

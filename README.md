@@ -3,7 +3,7 @@
 부산대학교 웹프로그래밍 수업 기말과제 프로젝트입니다.  
 Node.js + Express + SQLite3 + EJS로 구현한 간단한 쇼핑몰입니다.
 
-## 구현된 기능
+## 📦 구현된 기능
 
 ### 필수 기능
 - ✅ **회원가입 / 로그인 / 로그아웃** (bcrypt 비밀번호 암호화, 세션 기반)
@@ -26,7 +26,7 @@ Node.js + Express + SQLite3 + EJS로 구현한 간단한 쇼핑몰입니다.
 - 파일 첨부 (10MB, 최대 5개)
 - 반응형 디자인
 
-## 실행 방법
+## 🚀 실행 방법
 
 ### 1. 의존성 설치
 ```bash
@@ -63,7 +63,7 @@ npm start
 ```
 브라우저에서 http://localhost:3000 접속
 
-##  폴더 구조
+## 📁 폴더 구조
 
 ```
 board-project/
@@ -116,7 +116,7 @@ board-project/
     └── uploads/            # 공지 첨부파일
 ```
 
-##  DB 테이블
+## 🗄️ DB 테이블
 
 - **users**: 회원 (id, username, password, name)
 - **posts**: 게시글 (board_type으로 공지/문의 구분, parent_id로 계층형 답글)
@@ -124,7 +124,7 @@ board-project/
 - **products**: 상품
 - **cart_items**: 장바구니 (user_id + product_id 복합키)
 
-##  주요 URL
+## 🛣️ 주요 URL
 
 | URL | 설명 |
 |---|---|
@@ -141,7 +141,7 @@ board-project/
 | `/board/new` | 문의 작성 |
 | `/board/reply/:id` | 답글 작성 |
 
-##  테스트 시나리오
+## 🧪 테스트 시나리오
 
 1. 회원가입 → 로그인
 2. 상품 목록에서 장바구니 담기
