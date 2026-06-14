@@ -1,0 +1,90 @@
+<%- include('partials/header', { pageTitle: '아이디/비밀번호 찾기' }) %>
+
+<div class="container" style="max-width: 500px;">
+    <h2>🔍 아이디 / 비밀번호 찾기</h2>
+
+    <div style="display:flex; gap:6px; margin: 14px 0; border-bottom: 2px solid #eee;">
+        <button type="button" onclick="showTab('id')" id="tab-id"
+                style="flex:1; padding:10px; background:none; border:none; border-bottom:3px solid #2563eb; color:#2563eb; font-weight:bold; cursor:pointer;">
+            아이디 찾기
+        </button>
+        <button type="button" onclick="showTab('pw')" id="tab-pw"
+                style="flex:1; padding:10px; background:none; border:none; border-bottom:3px solid transparent; color:#888; cursor:pointer;">
+            비밀번호 찾기
+        </button>
+    </div>
+
+    <% if (error) { %><div class="error-msg"><%= error %></div><% } %>
+
+    <% if (result && result.type === 'id') { %>
+        <div class="success-msg">
+            ✅ 회원님의 아이디는 <strong style="font-size:16px;"><%= result.username %></strong> 입니다.
+        </div>
+        <div style="text-align:center; margin: 16px 0;">
+            <a href="user/login" class="btn">로그인하기</a>
+        </div>
+    <% } %>
+
+    <% if (result && result.type === 'pw') { %>
+        <div class="success-msg">
+            ✅ 임시 비밀번호: <strong style="font-size:16px; color:#dc2626; font-family:monospace;"><%= result.tempPw %></strong><br>
+            <span style="font-size:12px; color:#888;">⚠️ 로그인 후 반드시 변경해 주세요.</span>
+        </div>
+        <div style="text-align:center; margin: 16px 0;">
+            <a href="user/login" class="btn">로그인하기</a>
+        </div>
+    <% } %>
+
+    <div id="form-id" <%= mode === 'pw' ? 'style="display:none;"' : '' %>>
+        <p style="color:#666; font-size:13px;">가입 시 입력한 이름과 이메일로 아이디를 찾을 수 있습니다.</p>
+        <form action="user/find/id" method="POST">
+            <label for="name">이름 <span style="color:red;">*</span></label>
+            <input type="text" id="name" name="name" required>
+            <label for="email">이메일 <span style="color:red;">*</span></label>
+            <input type="email" id="email" name="email" required>
+            <button type="submit" style="width:100%;">아이디 찾기</button>
+        </form>
+    </div>
+
+    <div id="form-pw" <%= mode !== 'pw' ? 'style="display:none;"' : '' %>>
+        <p style="color:#666; font-size:13px;">아이디와 이메일로 임시 비밀번호를 발급해 드립니다.</p>
+        <form action="user/find/pw" method="POST">
+            <label for="username">아이디 <span style="color:red;">*</span></label>
+            <input type="text" id="username" name="username" required>
+            <label for="email_pw">이메일 <span style="color:red;">*</span></label>
+            <input type="email" id="email_pw" name="email" required>
+            <button type="submit" style="width:100%;">임시 비밀번호 발급</button>
+        </form>
+    </div>
+
+    <p style="margin-top: 16px; text-align: center; font-size:13px;">
+        <a href="user/login">로그인</a> · <a href="user/check">회원가입</a>
+    </p>
+</div>
+
+<script>
+function showTab(tab) {
+    if (tab === 'id') {
+        document.getElementById('form-id').style.display = 'block';
+        document.getElementById('form-pw').style.display = 'none';
+        document.getElementById('tab-id').style.borderBottomColor = '#2563eb';
+        document.getElementById('tab-id').style.color = '#2563eb';
+        document.getElementById('tab-id').style.fontWeight = 'bold';
+        document.getElementById('tab-pw').style.borderBottomColor = 'transparent';
+        document.getElementById('tab-pw').style.color = '#888';
+        document.getElementById('tab-pw').style.fontWeight = 'normal';
+    } else {
+        document.getElementById('form-id').style.display = 'none';
+        document.getElementById('form-pw').style.display = 'block';
+        document.getElementById('tab-pw').style.borderBottomColor = '#2563eb';
+        document.getElementById('tab-pw').style.color = '#2563eb';
+        document.getElementById('tab-pw').style.fontWeight = 'bold';
+        document.getElementById('tab-id').style.borderBottomColor = 'transparent';
+        document.getElementById('tab-id').style.color = '#888';
+        document.getElementById('tab-id').style.fontWeight = 'normal';
+    }
+}
+<% if (mode === 'pw') { %>showTab('pw');<% } %>
+</script>
+
+<%- include('partials/footer') %>

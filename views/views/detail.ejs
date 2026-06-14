@@ -1,0 +1,35 @@
+<%- include('partials/header', { pageTitle: post.title }) %>
+
+<% const isAuthor = user && user.username === post.author; %>
+<% const isAdmin = user && user.username === 'admin'; %>
+<% const isAnon = post.author === '익명'; %>
+
+<div class="container" style="max-width: 800px;">
+    <h2><%= post.title %></h2>
+    <div class="post-meta">
+        작성자: <strong><%= post.author %></strong>
+        | 작성일: <%= post.created_at %>
+        | 조회수: <%= post.views || 0 %>
+        <% if (post.parent_id) { %> | <span style="color:#2563eb;">[답글]</span> <% } %>
+    </div>
+    <div class="post-content"><%= post.content %></div>
+
+    <div class="post-actions">
+        <a href="board/reply/<%= post.id %>" class="btn">💬 답글 달기</a>
+        <% if (isAuthor) { %>
+            <a href="board/edit/<%= post.id %>" class="btn btn-secondary">✏️ 수정</a>
+        <% } else { %>
+            <span class="btn btn-secondary disabled">✏️ 수정</span>
+        <% } %>
+        <% if (isAuthor || (isAnon && isAdmin)) { %>
+            <a href="board/delete/<%= post.id %>" 
+               onclick="return confirm('정말 삭제하시겠습니까? 답글도 함께 삭제됩니다.');"
+               class="btn btn-danger">🗑 삭제</a>
+        <% } else { %>
+            <span class="btn btn-danger disabled">🗑 삭제</span>
+        <% } %>
+        <a href="board" class="btn btn-secondary">📋 목록</a>
+    </div>
+</div>
+
+<%- include('partials/footer') %>

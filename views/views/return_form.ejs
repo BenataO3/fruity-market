@@ -1,0 +1,64 @@
+<%- include('partials/header', { pageTitle: '반품 신청' }) %>
+
+<div class="container" style="max-width: 700px;">
+    <h2>🔄 반품 신청</h2>
+
+    <h3>📋 반품 대상 주문</h3>
+    <table class="board-table" style="margin-bottom: 16px;">
+        <tr><th style="width:140px;">주문번호</th><td>#<%= order.id %></td></tr>
+        <tr><th>주문일시</th><td><%= order.created_at %></td></tr>
+        <tr><th>주문금액</th><td><strong style="color:#2563eb;">₩<%= order.total_amount.toLocaleString() %></strong></td></tr>
+    </table>
+
+    <h3>🛍️ 반품 상품</h3>
+    <table class="board-table" style="margin-bottom: 16px;">
+        <thead>
+            <tr><th>상품명</th><th style="text-align:center;">수량</th><th style="text-align:right;">금액</th></tr>
+        </thead>
+        <tbody>
+            <% items.forEach(item => { %>
+                <tr>
+                    <td><%= item.product_name %></td>
+                    <td style="text-align:center;"><%= item.quantity %>개</td>
+                    <td style="text-align:right;">₩<%= (item.product_price * item.quantity).toLocaleString() %></td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+
+    <div style="background:#fef3c7; padding: 12px; border-radius: 6px; border-left: 4px solid #f59e0b; margin: 14px 0;">
+        <strong style="color:#92400e;">📝 반품 안내</strong>
+        <ul style="color:#78350f; font-size: 13px; margin: 6px 0 0; padding-left: 18px;">
+            <li>반품 신청은 배송완료 후 7일 이내에 가능합니다.</li>
+            <li>본 시스템은 데모이므로 실제 반품/환불은 진행되지 않습니다.</li>
+        </ul>
+    </div>
+
+    <h3>📝 반품 사유</h3>
+    <form action="order/return/<%= order.id %>" method="POST">
+        <label for="reason">반품 사유 <span style="color:red;">*</span></label>
+        <select id="reason" name="reason" required>
+            <option value="">선택해 주세요</option>
+            <option value="단순 변심">단순 변심</option>
+            <option value="상품 불량">상품 불량 (파손, 변질 등)</option>
+            <option value="오배송">오배송</option>
+            <option value="상품 정보와 다름">상품 정보와 다름</option>
+            <option value="배송 지연">배송 지연</option>
+            <option value="기타">기타</option>
+        </select>
+
+        <label for="detail">상세 사유 (선택)</label>
+        <textarea id="detail" name="detail" placeholder="자세한 사유를 적어주세요."></textarea>
+
+        <div style="display: flex; gap: 10px; margin-top: 16px;">
+            <a href="order/detail/<%= order.id %>" class="btn btn-secondary" style="flex:1; text-align:center;">취소</a>
+            <button type="submit" class="btn btn-danger" 
+                    style="flex:1;"
+                    onclick="return confirm('반품을 신청하시겠습니까?');">
+                반품 신청
+            </button>
+        </div>
+    </form>
+</div>
+
+<%- include('partials/footer') %>

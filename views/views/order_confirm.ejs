@@ -1,0 +1,67 @@
+<%- include('partials/header', { pageTitle: '주문 완료' }) %>
+
+<div class="container" style="max-width: 700px;">
+    <% if (error) { %>
+        <h2 style="text-align:center;">⚠️ 주문 확인</h2>
+        <div class="error-msg" style="text-align:center;"><%= error %></div>
+        <div style="text-align: center; margin-top: 16px;">
+            <a href="products" class="btn">상품 보러 가기</a>
+        </div>
+    <% } else { %>
+        <div style="display:flex; gap:6px; margin: 14px 0;">
+            <div style="flex:1; padding:8px; background:#22c55e; color:white; text-align:center; border-radius:5px; font-size:12px;">✓ 배송지 입력</div>
+            <div style="flex:1; padding:8px; background:#22c55e; color:white; text-align:center; border-radius:5px; font-size:12px;">✓ 결제</div>
+            <div style="flex:1; padding:8px; background:#2563eb; color:white; text-align:center; border-radius:5px; font-size:12px;">③ 주문 완료</div>
+        </div>
+
+        <div style="text-align:center;">
+            <div style="font-size: 48px;">🎉</div>
+            <h2>주문이 완료되었습니다!</h2>
+            <p style="color:#666;">
+                <strong><%= user.name %></strong>님, 주문번호: <strong>#<%= order.id %></strong>
+            </p>
+        </div>
+
+        <h3 style="margin-top:24px;">📍 배송지</h3>
+        <table class="board-table" style="margin-bottom: 16px;">
+            <tr><th style="width:120px;">받는 사람</th><td><%= order.receiver_name %></td></tr>
+            <tr><th>연락처</th><td><%= order.receiver_phone %></td></tr>
+            <tr><th>주소</th><td><%= order.receiver_address %></td></tr>
+            <% if (order.delivery_memo) { %>
+                <tr><th>배송 메모</th><td><%= order.delivery_memo %></td></tr>
+            <% } %>
+            <tr><th>결제 수단</th><td><%= order.payment_method || '신용카드' %></td></tr>
+        </table>
+
+        <h3>🛍️ 주문 상품</h3>
+        <table class="board-table">
+            <thead>
+                <tr><th>상품</th><th style="text-align:center;">수량</th><th style="text-align:right;">소계</th></tr>
+            </thead>
+            <tbody>
+                <% items.forEach(item => { %>
+                    <tr>
+                        <td>
+                            <%= item.product_name %><br>
+                            <span style="color:#888; font-size:12px;">₩<%= item.product_price.toLocaleString() %></span>
+                        </td>
+                        <td style="text-align:center;"><%= item.quantity %>개</td>
+                        <td style="text-align:right;">₩<%= (item.product_price * item.quantity).toLocaleString() %></td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+
+        <div style="text-align: right; font-size: 18px; font-weight: bold; padding: 14px 0; border-top: 2px solid #333;">
+            총 결제 금액: <span style="color:#2563eb;">₩<%= order.total_amount.toLocaleString() %></span>
+        </div>
+    <% } %>
+
+    <div style="margin-top: 20px; display: flex; gap: 10px; justify-content: center;">
+        <a href="./" class="btn btn-secondary">🏠 홈으로</a>
+        <% if (!error) { %><a href="order/list" class="btn">📦 주문내역 보기</a><% } %>
+        <a href="products" class="btn btn-success">🛒 쇼핑 계속하기</a>
+    </div>
+</div>
+
+<%- include('partials/footer') %>

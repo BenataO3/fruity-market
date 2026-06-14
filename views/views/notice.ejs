@@ -1,0 +1,39 @@
+<%- include('partials/header', { pageTitle: '공지사항' }) %>
+
+<div class="container">
+    <h2>📢 공지사항</h2>
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+        <p style="color:#666; margin:0;">쇼핑몰의 소식과 안내 사항입니다.</p>
+        <% if (user && user.username === 'admin') { %>
+            <a href="notice/new" class="btn btn-success">✏️ 공지 작성</a>
+        <% } %>
+    </div>
+
+    <table class="board-table">
+        <thead>
+            <tr>
+                <th class="col-num">번호</th>
+                <th>제목</th>
+                <th class="col-author">작성자</th>
+                <th class="col-views">조회수</th>
+                <th class="col-date">작성일</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% if (posts.length === 0) { %>
+                <tr><td colspan="5" style="text-align:center; padding: 30px;">등록된 공지사항이 없습니다.</td></tr>
+            <% } %>
+            <% posts.forEach((post, idx) => { %>
+                <tr>
+                    <td class="col-num"><%= posts.length - idx %></td>
+                    <td><a href="notice/view/<%= post.id %>"><%= post.title %></a></td>
+                    <td><%= post.author %></td>
+                    <td class="col-views"><%= post.views || 0 %></td>
+                    <td class="col-date"><%= post.created_at ? post.created_at.substring(0, 10) : '' %></td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+</div>
+
+<%- include('partials/footer') %>

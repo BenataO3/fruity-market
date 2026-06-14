@@ -1,0 +1,270 @@
+<%- include('partials/header', { pageTitle: 'FRUITY MARKET' }) %>
+
+<div class="container">
+
+    <!-- ===== 배너 (왼쪽 카피 + 오른쪽 SVG 일러스트) ===== -->
+    <section class="hero-banner">
+        <img class="hero-bg" src="images/hero_farmer.jpg"
+             onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1533330265487-9d2bd48b57e4?auto=format&fit=crop&w=1600&q=80';"
+             alt="과일을 수확하는 농부">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <div class="hero-eyebrow">FRUITY MARKET</div>
+            <div class="hero-title">
+                매일 새벽,<br>
+                <span class="hero-highlight">신선한 과일</span>이 도착합니다
+            </div>
+            <div id="banner-text" class="hero-sub">
+                🍓 오늘의 신선한 과일을 만나보세요!
+            </div>
+            <div class="hero-buttons">
+                <a href="products/all" class="hero-btn-primary">쇼핑하기</a>
+                <% if (user) { %>
+                    <a href="cart" class="hero-btn-secondary">🛒 장바구니</a>
+                <% } else { %>
+                    <a href="user/login" class="hero-btn-secondary">🔑 로그인하기</a>
+                <% } %>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== 인기 상품 (4개씩 슬라이드) ===== -->
+    <section class="section-block">
+        <div class="section-header">
+            <h2 class="section-title">인기 상품</h2>
+            <a href="products/all" class="section-link">VIEW ALL →</a>
+        </div>
+
+        <% if (featuredProducts.length === 0) { %>
+            <p style="color:#999;">등록된 추천 상품이 없습니다.</p>
+        <% } else { %>
+            <div id="featured-container">
+                <% for (let i = 0; i < featuredProducts.length; i += 4) { %>
+                    <div class="featured-slide <%= i === 0 ? 'active' : '' %>" style="display: <%= i === 0 ? 'grid' : 'none' %>; grid-template-columns: repeat(4, 1fr); gap: 20px;">
+                        <% for (let j = i; j < i + 4 && j < featuredProducts.length; j++) { %>
+                            <% const p = featuredProducts[j]; %>
+                            <% const isWished = wishSet.has(p.id); %>
+                            <div class="product-card featured-card">
+                                <a href="products/detail/<%= p.id %>" class="card-link">
+                                    <div class="img-wrap">
+                                        <img src="<%= p.image.replace(/^\//, '') %>" alt="<%= p.name %>"
+                                             onerror="this.src='images/default.png';">
+                                    </div>
+                                    <div style="font-size:11px; letter-spacing:1px; color:#999; margin-top:4px;">FEATURED</div>
+                                    <h3 style="margin-top:2px;"><%= p.name %></h3>
+                                    <div class="price-row" style="display:flex; justify-content:space-between; align-items:baseline; margin-top:6px;">
+                                        <strong>₩<%= p.price.toLocaleString() %></strong>
+                                        <span class="best-badge">BEST</span>
+                                    </div>
+                                </a>
+                                <div class="action-row">
+                                    <form action="cart/add" method="POST" style="flex:1;">
+                                        <input type="hidden" name="productId" value="<%= p.id %>">
+                                        <button type="submit" class="cart-button">CART</button>
+                                    </form>
+                                    <form action="wishlist/toggle" method="POST">
+                                        <input type="hidden" name="productId" value="<%= p.id %>">
+                                        <button type="submit"
+                                                class="heart-btn <%= isWished ? 'active' : '' %>"
+                                                title="<%= isWished ? '위시리스트에서 제거' : '위시리스트에 담기' %>">
+                                            <span class="heart-icon">❤️</span>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        <% } %>
+                    </div>
+                <% } %>
+            </div>
+
+            <% if (featuredProducts.length > 4) { %>
+                <div id="slide-dots" style="text-align:center; margin-top: 16px;">
+                    <% for (let i = 0; i < Math.ceil(featuredProducts.length / 4); i++) { %>
+                        <span class="dot" data-idx="<%= i %>"
+                              style="display:inline-block; width:8px; height:8px; margin:0 4px; border-radius:50%; background:<%= i === 0 ? '#111' : '#ddd' %>; cursor:pointer; transition:background 0.2s;"></span>
+                    <% } %>
+                </div>
+            <% } %>
+        <% } %>
+    </section>
+
+    <!-- ===== 카테고리 쇼케이스 ===== -->
+    <section class="section-block">
+        <div class="section-header">
+            <h2 class="section-title">카테고리</h2>
+            <span class="section-eyebrow">CATEGORY</span>
+        </div>
+        <div class="category-showcase">
+            <a href="products/all?category=fruit" class="cat-card cat-fruit">
+                <div class="cat-emoji">🍎</div>
+                <div class="cat-label">단품 과일</div>
+                <div class="cat-sub">신선한 제철 과일</div>
+            </a>
+            <a href="products/all?category=box" class="cat-card cat-box">
+                <div class="cat-emoji">📦</div>
+                <div class="cat-label">과일 상자</div>
+                <div class="cat-sub">대량 구매 산지 직송</div>
+            </a>
+            <a href="products/all?category=gift" class="cat-card cat-gift">
+                <div class="cat-emoji">🎁</div>
+                <div class="cat-label">선물 세트</div>
+                <div class="cat-sub">특별한 날 특별한 선물</div>
+            </a>
+            <a href="products/all?category=dessert" class="cat-card cat-dessert">
+                <div class="cat-emoji">🍰</div>
+                <div class="cat-label">디저트 & 가공품</div>
+                <div class="cat-sub">잼 · 주스 · 디저트</div>
+            </a>
+            <a href="products/all?category=small" class="cat-card cat-small">
+                <div class="cat-emoji">👤</div>
+                <div class="cat-label">1인 가구 / 실속</div>
+                <div class="cat-sub">혼자 먹기 좋은 양</div>
+            </a>
+        </div>
+    </section>
+
+    <!-- ===== 신상품 ===== -->
+    <% if (newProducts && newProducts.length > 0) { %>
+    <section class="section-block">
+        <div class="section-header">
+            <h2 class="section-title">신상품</h2>
+            <span class="section-eyebrow">NEW ARRIVAL</span>
+        </div>
+        <div class="product-grid">
+            <% newProducts.forEach(p => { %>
+                <% const isWished = wishSet.has(p.id); %>
+                <div class="product-card featured-card">
+                    <a href="products/detail/<%= p.id %>" class="card-link">
+                        <div class="img-wrap">
+                            <img src="<%= p.image.replace(/^\//, '') %>" alt="<%= p.name %>"
+                                 onerror="this.src='images/default.png';">
+                            <span class="new-badge">NEW</span>
+                        </div>
+                        <h3><%= p.emoji %> <%= p.name %></h3>
+                        <div class="price-row" style="display:flex; justify-content:space-between; align-items:baseline; margin-top:6px;">
+                            <strong>₩<%= p.price.toLocaleString() %></strong>
+                        </div>
+                    </a>
+                    <div class="action-row">
+                        <form action="cart/add" method="POST" style="flex:1;">
+                            <input type="hidden" name="productId" value="<%= p.id %>">
+                            <button type="submit" class="cart-button">🛒 담기</button>
+                        </form>
+                        <form action="wishlist/toggle" method="POST">
+                            <input type="hidden" name="productId" value="<%= p.id %>">
+                            <button type="submit"
+                                    class="heart-btn <%= isWished ? 'active' : '' %>"
+                                    title="<%= isWished ? '위시리스트에서 제거' : '위시리스트에 담기' %>">
+                                <span class="heart-icon">❤️</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            <% }) %>
+        </div>
+    </section>
+    <% } %>
+
+    <!-- ===== 최근 공지사항 ===== -->
+    <% if (notices && notices.length > 0) { %>
+    <section class="section-block">
+        <div class="section-header">
+            <h2 class="section-title">공지사항</h2>
+            <a href="notice" class="section-link">VIEW ALL →</a>
+        </div>
+        <div class="notice-list">
+            <% notices.forEach(n => { %>
+                <a href="notice/view/<%= n.id %>" class="notice-item">
+                    <div class="notice-tag">📢 NOTICE</div>
+                    <div class="notice-title"><%= n.title %></div>
+                    <div class="notice-date"><%= n.created_at ? n.created_at.substring(0, 10) : '' %></div>
+                </a>
+            <% }) %>
+        </div>
+    </section>
+    <% } %>
+
+    <!-- ===== EXPLORE 메뉴 ===== -->
+    <section class="section-block">
+        <div class="section-header">
+            <h2 class="section-title">바로가기</h2>
+            <span class="section-eyebrow">EXPLORE</span>
+        </div>
+        <div class="explore-grid">
+            <a href="wishlist" class="explore-card">
+                <div class="explore-icon">♡</div>
+                <h3>위시리스트</h3>
+                <p>관심 상품 모아보기</p>
+            </a>
+            <a href="order/list" class="explore-card">
+                <div class="explore-icon">📦</div>
+                <h3>주문/배송</h3>
+                <p>내 주문 확인하기</p>
+            </a>
+            <a href="notice" class="explore-card">
+                <div class="explore-icon">📢</div>
+                <h3>공지사항</h3>
+                <p>쇼핑몰 소식</p>
+            </a>
+            <a href="board" class="explore-card">
+                <div class="explore-icon">💬</div>
+                <h3>고객센터</h3>
+                <p>문의 및 답변</p>
+            </a>
+        </div>
+    </section>
+</div>
+
+<script>
+// 인기상품 슬라이드
+document.addEventListener("DOMContentLoaded", () => {
+    const slides = document.querySelectorAll('.featured-slide');
+    const dots = document.querySelectorAll('#slide-dots .dot');
+    let current = 0;
+
+    function showSlide(index) {
+        slides.forEach((s, i) => {
+            if (i === index) {
+                s.classList.add('active');
+                s.style.display = 'grid';
+            } else {
+                s.classList.remove('active');
+                s.style.display = 'none';
+            }
+        });
+        dots.forEach((d, i) => d.style.background = (i === index) ? '#111' : '#ddd');
+    }
+
+    dots.forEach((dot, i) => {
+        dot.addEventListener('click', () => { current = i; showSlide(current); });
+    });
+
+    if (slides.length > 1) {
+        setInterval(() => {
+            current = (current + 1) % slides.length;
+            showSlide(current);
+        }, 3000);
+    }
+});
+
+// 배너 텍스트 변경
+document.addEventListener("DOMContentLoaded", () => {
+    const phrases = [
+        "🍓 오늘의 신선한 과일을 만나보세요!",
+        "🍌 인기 많은 과일을 지금 확인해보세요!",
+        "🍊 달콤한 오렌지, 무료배송 중!",
+        "🍇 포도로 건강 챙기세요!",
+        "🥝 한정 수량 특가! 지금 주문하면 내일 도착!",
+        "🍍 과일 한입에 기분까지 상큼해져요!"
+    ];
+    const bannerText = document.getElementById("banner-text");
+    if (!bannerText) return;
+    let i = 0;
+    setInterval(() => {
+        i = (i + 1) % phrases.length;
+        bannerText.textContent = phrases[i];
+    }, 3000);
+});
+</script>
+
+<%- include('partials/footer') %>

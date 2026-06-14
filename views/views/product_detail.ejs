@@ -1,0 +1,54 @@
+<%- include('partials/header', { pageTitle: product.name + ' - Fruity Market' }) %>
+
+<div class="container">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; align-items:start;">
+        <div>
+            <img src="<%= product.image.replace(/^\//, '') %>" alt="<%= product.name %>"
+                 style="width: 100%; border-radius: 12px;"
+                 onerror="this.src='images/default.png';">
+        </div>
+        <div>
+            <h2 style="border:none;">
+                <%= product.emoji %> <%= product.name %>
+                <% if (product.is_featured === 1) { %>
+                    <span style="color: #facc15; font-size: 0.7em;">★ 추천</span>
+                <% } %>
+            </h2>
+
+            <p style="color:#555; font-size: 15px; margin: 16px 0; line-height: 1.7;">
+                <%= product.description %>
+            </p>
+
+            <p style="font-size: 30px; font-weight: bold; color: #2563eb; margin: 20px 0;">
+                ₩<%= product.price.toLocaleString() %>
+            </p>
+
+            <p style="color:#ef4444; font-size: 14px; font-weight: 600;">
+                ❤️ <%= likeCount %>명이 좋아하고 있습니다
+            </p>
+
+            <form action="cart/add" method="POST" style="margin-top: 20px;">
+                <input type="hidden" name="productId" value="<%= product.id %>">
+                <button type="submit" class="btn btn-success" style="width:100%; padding: 14px; font-size:15px;">
+                    🛒 장바구니에 담기
+                </button>
+            </form>
+
+            <form action="wishlist/toggle" method="POST" style="margin-top: 8px;">
+                <input type="hidden" name="productId" value="<%= product.id %>">
+                <button type="submit" 
+                        style="width:100%; padding:14px; background: <%= inWishlist ? '#9ca3af' : '#ec4899' %>; color:#fff; border:none; border-radius:6px; cursor:pointer; font-size:15px;">
+                    <%= inWishlist ? '💔 위시리스트에서 제거' : '❤️ 위시리스트에 담기' %>
+                </button>
+            </form>
+
+            <div style="margin-top: 12px;">
+                <a href="products" class="btn btn-secondary" style="width:100%; text-align:center; box-sizing:border-box;">
+                    ← 상품 목록으로
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('partials/footer') %>

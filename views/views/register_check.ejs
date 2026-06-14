@@ -1,0 +1,31 @@
+<%- include('partials/header', { pageTitle: '가입여부 확인' }) %>
+
+<div class="container" style="max-width: 500px;">
+    <h2>📝 회원가입 - 1/3 단계</h2>
+
+    <div style="display:flex; gap:6px; margin: 14px 0;">
+        <div style="flex:1; padding:8px; background:#2563eb; color:white; text-align:center; border-radius:5px; font-size:12px;">① 가입여부 확인</div>
+        <div style="flex:1; padding:8px; background:#e5e7eb; color:#888; text-align:center; border-radius:5px; font-size:12px;">② 약관 동의</div>
+        <div style="flex:1; padding:8px; background:#e5e7eb; color:#888; text-align:center; border-radius:5px; font-size:12px;">③ 정보 입력</div>
+    </div>
+
+    <% if (error) { %><div class="error-msg"><%= error %></div><% } %>
+
+    <p style="color:#666;">사용하실 아이디를 먼저 확인해 주세요.</p>
+
+    <form action="user/check" method="POST">
+        <label for="username">아이디 <span style="color:red;">*</span></label>
+        <input type="text" id="username" name="username" placeholder="3자 이상" required minlength="3">
+        <div style="display:flex; gap:10px;">
+            <button type="submit" style="flex:1;">다음 →</button>
+            <a href="./" class="btn btn-secondary" style="flex:1; text-align:center;">취소</a>
+        </div>
+    </form>
+
+    <p style="margin-top:20px; text-align:center; color:#666; font-size:13px;">
+        이미 회원이신가요? <a href="user/login">로그인</a> · 
+        <a href="user/find">아이디/비밀번호 찾기</a>
+    </p>
+</div>
+
+<%- include('partials/footer') %>

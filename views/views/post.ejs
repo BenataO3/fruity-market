@@ -1,0 +1,28 @@
+<%- include('partials/header', { pageTitle: post ? '글 수정' : '새 글 작성' }) %>
+
+<div class="container" style="max-width: 700px;">
+    <h2><%= post ? '✏️ 글 수정' : '✏️ 새 글 작성' %></h2>
+
+    <p style="color:#666;">
+        작성자: <strong><%= user ? user.username : '익명' %></strong>
+        <% if (!user) { %>
+            <span style="font-size:12px;">(로그인하지 않으면 익명으로 등록됩니다.)</span>
+        <% } %>
+    </p>
+
+    <form action="<%= post ? '/board/edit/' + post.id : '/board/new' %>" method="post">
+        <% if (typeof parentId !== 'undefined' && parentId) { %>
+            <input type="hidden" name="parent_id" value="<%= parentId %>">
+        <% } %>
+        <label for="title">제목 <span style="color:red;">*</span></label>
+        <input type="text" id="title" name="title" value="<%= post ? post.title : '' %>" required>
+        <label for="content">내용 <span style="color:red;">*</span></label>
+        <textarea id="content" name="content" required><%= post ? post.content : '' %></textarea>
+        <div style="display: flex; gap: 10px;">
+            <button type="submit"><%= post ? '수정 완료' : '등록' %></button>
+            <a href="board" class="btn btn-secondary">취소</a>
+        </div>
+    </form>
+</div>
+
+<%- include('partials/footer') %>

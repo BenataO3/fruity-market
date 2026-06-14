@@ -1,0 +1,55 @@
+<%- include('partials/header', { pageTitle: '장바구니' }) %>
+
+<div class="container">
+    <h2>🛒 <%= user.name %>님의 장바구니</h2>
+
+    <% if (cartItems.length === 0) { %>
+        <div style="text-align: center; padding: 40px; color: #888;">
+            <p style="font-size: 16px;">장바구니가 비어 있습니다. 🍃</p>
+            <a href="products" class="btn" style="margin-top: 16px;">상품 보러 가기</a>
+        </div>
+    <% } else { %>
+        <ul class="cart-list">
+            <% cartItems.forEach(item => { %>
+                <li>
+                    <div class="item-info">
+                        <strong><%= item.emoji %> <%= item.name %></strong><br>
+                        <span style="color:#888;">
+                            ₩<%= item.price.toLocaleString() %> × <%= item.quantity %>개 
+                            = <strong style="color:#2563eb;">₩<%= (item.price * item.quantity).toLocaleString() %></strong>
+                        </span>
+                    </div>
+
+                    <div class="qty-controls">
+                        <form action="cart/update" method="POST" style="display: inline-flex; gap:6px; align-items:center;">
+                            <input type="hidden" name="productId" value="<%= item.id %>">
+                            <button type="submit" name="action" value="decrease">➖</button>
+                            <span style="min-width:30px; text-align:center;"><%= item.quantity %></span>
+                            <button type="submit" name="action" value="increase">➕</button>
+                        </form>
+
+                        <form action="cart/delete" method="POST" style="display: inline;">
+                            <input type="hidden" name="productId" value="<%= item.id %>">
+                            <button type="submit" class="delete-button">🗑 삭제</button>
+                        </form>
+                    </div>
+                </li>
+            <% }) %>
+        </ul>
+
+        <div class="cart-total">
+            총 결제 금액: <span style="color:#2563eb;">₩<%= total.toLocaleString() %></span>
+        </div>
+
+        <div style="display: flex; gap: 10px; justify-content: space-between; margin-top: 20px;">
+            <a href="products" class="btn btn-secondary">← 상품 계속 보기</a>
+            <form action="order/checkout" method="POST" style="margin: 0;">
+                <button type="submit" class="btn btn-success" style="padding: 10px 20px;">
+                    ✅ 주문하기
+                </button>
+            </form>
+        </div>
+    <% } %>
+</div>
+
+<%- include('partials/footer') %>

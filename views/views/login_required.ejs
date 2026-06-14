@@ -1,0 +1,6 @@
+<%- include('partials/header', { pageTitle: '로그인 필요' }) %>
+<div class="container" style="max-width: 500px; text-align: center;">
+    <h2>🔒 <%= message %></h2>
+    <a class="btn" href="<%= redirectUrl %>" style="margin-top: 20px;">🔑 로그인하러 가기</a>
+</div>
+<%- include('partials/footer') %>

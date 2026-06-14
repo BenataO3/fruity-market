@@ -1,0 +1,97 @@
+<%- include('partials/header', { pageTitle: '주문 상세' }) %>
+
+<div class="container">
+    <h2>📋 주문 상세 - #<%= order.id %></h2>
+
+    <h3>📌 주문 정보</h3>
+    <table class="board-table" style="margin-bottom: 16px;">
+        <tr><th style="width:140px;">주문번호</th><td>#<%= order.id %></td></tr>
+        <tr><th>주문일시</th><td><%= order.created_at %></td></tr>
+        <tr>
+            <th>주문상태</th>
+            <td>
+                <% if (order.status === '주문완료') { %><span style="color:#2563eb; font-weight:bold;">⏳ <%= order.status %></span>
+                <% } else if (order.status === '배송준비') { %><span style="color:#0891b2; font-weight:bold;">📦 <%= order.status %></span>
+                <% } else if (order.status === '배송중') { %><span style="color:#7c3aed; font-weight:bold;">🚚 <%= order.status %></span>
+                <% } else if (order.status === '배송완료') { %><span style="color:#22c55e; font-weight:bold;">✅ <%= order.status %></span>
+                <% } else if (order.status === '주문취소') { %><span style="color:#ef4444;">❌ <%= order.status %></span>
+                <% } else if (order.status === '반품요청') { %><span style="color:#f97316; font-weight:bold;">🔄 <%= order.status %></span>
+                <% } else if (order.status === '반품완료') { %><span style="color:#888;">↩️ <%= order.status %></span>
+                <% } else { %><%= order.status %><% } %>
+            </td>
+        </tr>
+        <tr><th>총 결제금액</th><td><strong style="color:#2563eb; font-size:16px;">₩<%= order.total_amount.toLocaleString() %></strong></td></tr>
+        <tr><th>결제 수단</th><td><%= order.payment_method || '-' %></td></tr>
+    </table>
+
+    <h3>📍 배송지</h3>
+    <table class="board-table" style="margin-bottom: 16px;">
+        <tr><th style="width:140px;">받는 사람</th><td><%= order.receiver_name || '-' %></td></tr>
+        <tr><th>연락처</th><td><%= order.receiver_phone || '-' %></td></tr>
+        <tr><th>주소</th><td><%= order.receiver_address || '-' %></td></tr>
+        <% if (order.delivery_memo) { %>
+            <tr><th>배송 메모</th><td><%= order.delivery_memo %></td></tr>
+        <% } %>
+    </table>
+
+    <h3>🛍️ 주문 상품</h3>
+    <table class="board-table">
+        <thead>
+            <tr><th>상품명</th><th style="text-align:center;">단가</th><th style="text-align:center;">수량</th><th style="text-align:right;">소계</th></tr>
+        </thead>
+        <tbody>
+            <% items.forEach(item => { %>
+                <tr>
+                    <td><%= item.product_name %></td>
+                    <td style="text-align:center;">₩<%= item.product_price.toLocaleString() %></td>
+                    <td style="text-align:center;"><%= item.quantity %>개</td>
+                    <td style="text-align:right;"><strong>₩<%= (item.product_price * item.quantity).toLocaleString() %></strong></td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+
+    <% if (returnInfo) { %>
+        <h3 style="margin-top: 24px;">🔄 반품 신청 정보</h3>
+        <div style="background:#fff7ed; padding: 12px; border-radius: 6px; border-left: 4px solid #f97316;">
+            <p><strong>접수일:</strong> <%= returnInfo.created_at %></p>
+            <p><strong>사유:</strong> <%= returnInfo.reason %></p>
+            <% if (returnInfo.detail) { %><p><strong>상세:</strong> <%= returnInfo.detail %></p><% } %>
+            <p><strong>처리 상태:</strong> <%= returnInfo.status %></p>
+        </div>
+    <% } %>
+
+    <div style="display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap;">
+        <a href="order/list" class="btn btn-secondary">← 주문내역으로</a>
+        <% if (['주문완료', '배송준비'].includes(order.status)) { %>
+            <form action="order/cancel/<%= order.id %>" method="POST"
+                  style="margin:0;"
+                  onsubmit="return confirm('주문을 취소하시겠습니까?');">
+                <button type="submit" class="btn btn-danger">주문 취소</button>
+            </form>
+        <% } %>
+        <% if (order.status === '배송완료' && !returnInfo) { %>
+            <a href="order/return/<%= order.id %>" style="background:#f97316; color:#fff; padding: 8px 16px; border-radius:5px; text-decoration:none;">🔄 반품 신청</a>
+        <% } %>
+    </div>
+
+    <% if (user && user.username === 'admin') { %>
+        <div style="margin-top: 24px; padding: 14px; background:#f9f9f9; border-radius: 6px; border: 2px dashed #aaa;">
+            <h3 style="margin:0 0 8px;">🔧 관리자 - 배송 상태 변경</h3>
+            <form action="order/admin/status/<%= order.id %>" method="POST" style="display:flex; gap:10px;">
+                <select name="status" style="margin:0; flex:1;">
+                    <option value="주문완료" <%= order.status === '주문완료' ? 'selected' : '' %>>주문완료</option>
+                    <option value="배송준비" <%= order.status === '배송준비' ? 'selected' : '' %>>배송준비</option>
+                    <option value="배송중" <%= order.status === '배송중' ? 'selected' : '' %>>배송중</option>
+                    <option value="배송완료" <%= order.status === '배송완료' ? 'selected' : '' %>>배송완료</option>
+                    <option value="주문취소" <%= order.status === '주문취소' ? 'selected' : '' %>>주문취소</option>
+                    <option value="반품완료" <%= order.status === '반품완료' ? 'selected' : '' %>>반품완료</option>
+                </select>
+                <button type="submit" style="margin:0;">상태 변경</button>
+            </form>
+            <p style="font-size:11px; color:#888; margin-top:6px;">ℹ️ 시연용 기능</p>
+        </div>
+    <% } %>
+</div>
+
+<%- include('partials/footer') %>

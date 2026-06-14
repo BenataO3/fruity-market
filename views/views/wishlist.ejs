@@ -1,0 +1,47 @@
+<%- include('partials/header', { pageTitle: '위시리스트' }) %>
+
+<div class="container">
+    <h2>❤️ <%= user.name %>님의 위시리스트</h2>
+
+    <% if (items.length === 0) { %>
+        <div style="text-align: center; padding: 40px; color: #888;">
+            <p style="font-size: 16px;">💔 위시리스트가 비어 있습니다.</p>
+            <a href="products" class="btn" style="margin-top: 16px;">상품 보러 가기</a>
+        </div>
+    <% } else { %>
+        <p style="color:#666;">총 <strong><%= items.length %></strong>개의 상품을 담아두셨습니다.</p>
+        <div class="product-grid">
+            <% items.forEach(p => { %>
+                <div class="product-card featured-card">
+                    <a href="products/detail/<%= p.id %>" class="card-link">
+                        <div class="img-wrap">
+                            <img src="<%= p.image.replace(/^\//, '') %>" alt="<%= p.name %>"
+                                 onerror="this.src='images/default.png';">
+                            <% if (p.is_featured === 1) { %>
+                                <span class="featured-badge">★ 추천</span>
+                            <% } %>
+                        </div>
+                        <h3><%= p.emoji %> <%= p.name %></h3>
+                        <div class="price-row" style="display:flex; justify-content:space-between; align-items:baseline; margin-top:6px;">
+                            <strong>₩<%= p.price.toLocaleString() %></strong>
+                        </div>
+                    </a>
+                    <div class="action-row">
+                        <form action="wishlist/to-cart" method="POST" style="flex:1;">
+                            <input type="hidden" name="productId" value="<%= p.id %>">
+                            <button type="submit" class="cart-button">🛒 담기</button>
+                        </form>
+                        <form action="wishlist/toggle" method="POST">
+                            <input type="hidden" name="productId" value="<%= p.id %>">
+                            <button type="submit" class="heart-btn active" title="위시리스트에서 제거">
+                                <span class="heart-icon">❤️</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            <% }) %>
+        </div>
+    <% } %>
+</div>
+
+<%- include('partials/footer') %>

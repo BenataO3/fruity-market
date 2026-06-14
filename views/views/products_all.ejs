@@ -1,0 +1,156 @@
+<%- include('partials/header', { pageTitle: '전체 상품 목록' }) %>
+
+<div class="container">
+    <h2 style="border:none; padding:0; margin-bottom:14px;">
+        <%= categories[category] ? categories[category].emoji + ' ' + categories[category].label : '📦 전체 상품' %>
+    </h2>
+
+    <!-- 카테고리 칩 -->
+    <div class="category-chips">
+        <% Object.entries(categories).forEach(([key, c]) => { %>
+            <a href="products/all?category=<%= key %>"
+               class="<%= category === key ? 'active' : '' %>">
+                <%= c.emoji %> <%= c.label %>
+            </a>
+        <% }) %>
+    </div>
+
+    <form method="GET" action="products/all" class="search-bar">
+        <input type="hidden" name="category" value="<%= category %>">
+        <input type="text" name="q" value="<%= keyword %>"
+               placeholder="🔍 상품명 또는 설명으로 검색"
+               style="flex:1; margin:0;">
+        <select name="sort" style="margin:0; width: 160px;">
+            <option value="default" <%= sort === 'default' ? 'selected' : '' %>>기본 정렬</option>
+            <option value="price_asc" <%= sort === 'price_asc' ? 'selected' : '' %>>가격 낮은순</option>
+            <option value="price_desc" <%= sort === 'price_desc' ? 'selected' : '' %>>가격 높은순</option>
+            <option value="name" <%= sort === 'name' ? 'selected' : '' %>>이름순</option>
+            <option value="popular" <%= sort === 'popular' ? 'selected' : '' %>>인기순</option>
+        </select>
+        <button type="submit" style="margin:0;">검색</button>
+        <% if (keyword || sort !== 'default') { %>
+            <a href="products/all?category=<%= category %>" class="btn btn-secondary">초기화</a>
+        <% } %>
+    </form>
+
+    <p style="color:#666; margin: 10px 0;">
+        <% if (keyword) { %>"<strong><%= keyword %></strong>" 검색 결과: <% } %>
+        총 <strong><%= count %></strong>개의 상품
+        <% if (pagination && pagination.totalPages > 1) { %>
+            <span style="color:#999; margin-left:8px;">
+                · <%= pagination.currentPage %>/<%= pagination.totalPages %> 페이지
+            </span>
+        <% } %>
+    </p>
+
+    <% if (products.length === 0) { %>
+        <div style="text-align:center; padding: 40px; color:#888;">
+            <p>해당 조건에 맞는 상품이 없습니다.</p>
+            <a href="products/all" class="btn">전체 상품 보기</a>
+        </div>
+    <% } else { %>
+        <div class="product-grid">
+            <% products.forEach(p => { %>
+                <% const isWished = wishSet.has(p.id); %>
+                <div class="product-card featured-card">
+                    <a href="products/detail/<%= p.id %>" class="card-link">
+                        <div class="img-wrap">
+                            <img src="<%= p.image.replace(/^\//, '') %>" alt="<%= p.name %>"
+                                 onerror="this.src='images/default.png';">
+                            <% if (p.is_featured === 1) { %>
+                                <span class="featured-badge">★ 추천</span>
+                            <% } %>
+                        </div>
+                        <h3><%= p.emoji %> <%= p.name %></h3>
+                        <div class="price-row" style="display:flex; justify-content:space-between; align-items:baseline; margin-top:6px;">
+                            <strong>₩<%= p.price.toLocaleString() %></strong>
+                        </div>
+                    </a>
+                    <div class="action-row">
+                        <form action="cart/add" method="POST" style="flex:1;">
+                            <input type="hidden" name="productId" value="<%= p.id %>">
+                            <button type="submit" class="cart-button">🛒 담기</button>
+                        </form>
+                        <form action="wishlist/toggle" method="POST">
+                            <input type="hidden" name="productId" value="<%= p.id %>">
+                            <button type="submit"
+                                    class="heart-btn <%= isWished ? 'active' : '' %>"
+                                    title="<%= isWished ? '위시리스트에서 제거' : '위시리스트에 담기' %>">
+                                <span class="heart-icon">❤️</span>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            <% }) %>
+        </div>
+
+        <!-- ===== 페이지네이션 ===== -->
+        <% if (pagination && pagination.totalPages > 1) { %>
+            <%
+            // 현재 검색/카테고리/정렬 조건을 query string으로 유지
+            function pageUrl(p) {
+                const params = new URLSearchParams();
+                if (category) params.set('category', category);
+                if (keyword) params.set('q', keyword);
+                if (sort && sort !== 'default') params.set('sort', sort);
+                params.set('page', p);
+                return '/products/all?' + params.toString();
+            }
+            const cur = pagination.currentPage;
+            const tot = pagination.totalPages;
+            // 표시할 페이지 번호 범위: 현재 기준 양옆 2개 + 처음/끝
+            const windowSize = 2;
+            const pages = [];
+            for (let i = Math.max(1, cur - windowSize); i <= Math.min(tot, cur + windowSize); i++) {
+                pages.push(i);
+            }
+            %>
+            <nav class="pagination">
+                <!-- 처음 / 이전 -->
+                <% if (cur > 1) { %>
+                    <a href="<%= pageUrl(1) %>" class="page-link" title="처음으로">«</a>
+                    <a href="<%= pageUrl(cur - 1) %>" class="page-link" title="이전">‹</a>
+                <% } else { %>
+                    <span class="page-link disabled">«</span>
+                    <span class="page-link disabled">‹</span>
+                <% } %>
+
+                <!-- 1 페이지 + ... -->
+                <% if (pages[0] > 1) { %>
+                    <a href="<%= pageUrl(1) %>" class="page-link">1</a>
+                    <% if (pages[0] > 2) { %>
+                        <span class="page-link disabled">…</span>
+                    <% } %>
+                <% } %>
+
+                <!-- 페이지 번호들 -->
+                <% pages.forEach(p => { %>
+                    <% if (p === cur) { %>
+                        <span class="page-link active"><%= p %></span>
+                    <% } else { %>
+                        <a href="<%= pageUrl(p) %>" class="page-link"><%= p %></a>
+                    <% } %>
+                <% }) %>
+
+                <!-- ... + 마지막 페이지 -->
+                <% if (pages[pages.length-1] < tot) { %>
+                    <% if (pages[pages.length-1] < tot - 1) { %>
+                        <span class="page-link disabled">…</span>
+                    <% } %>
+                    <a href="<%= pageUrl(tot) %>" class="page-link"><%= tot %></a>
+                <% } %>
+
+                <!-- 다음 / 끝 -->
+                <% if (cur < tot) { %>
+                    <a href="<%= pageUrl(cur + 1) %>" class="page-link" title="다음">›</a>
+                    <a href="<%= pageUrl(tot) %>" class="page-link" title="마지막으로">»</a>
+                <% } else { %>
+                    <span class="page-link disabled">›</span>
+                    <span class="page-link disabled">»</span>
+                <% } %>
+            </nav>
+        <% } %>
+    <% } %>
+</div>
+
+<%- include('partials/footer') %>

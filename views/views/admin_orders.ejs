@@ -1,0 +1,72 @@
+<%- include('partials/header', { pageTitle: '주문/배송 관리' }) %>
+
+<div class="container">
+    <h2>📦 주문/배송 관리</h2>
+
+    <div class="admin-tabs">
+        <a href="admin">📊 대시보드</a>
+        <a href="admin/orders" class="active">📦 주문/배송 관리</a>
+        <a href="admin/products">🍎 상품 관리</a>
+    </div>
+
+    <p style="color:#666; font-size: 13px;">
+        주문 상태 변경: 
+        <span style="color:#2563eb;">⏳ 주문완료</span> →
+        <span style="color:#0891b2;">📦 배송준비</span> →
+        <span style="color:#7c3aed;">🚚 배송중</span> →
+        <span style="color:#22c55e;">✅ 배송완료</span>
+    </p>
+
+    <% if (orders.length === 0) { %>
+        <p style="text-align:center; padding:30px; color:#888;">주문 내역이 없습니다.</p>
+    <% } else { %>
+        <table class="board-table">
+            <thead>
+                <tr>
+                    <th class="col-num">주문번호</th>
+                    <th>주문자</th>
+                    <th>받는사람</th>
+                    <th class="col-date">주문일시</th>
+                    <th>금액</th>
+                    <th style="width:260px;">상태 변경</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% orders.forEach(order => { %>
+                    <tr>
+                        <td class="col-num">
+                            <a href="order/detail/<%= order.id %>">#<%= order.id %></a>
+                        </td>
+                        <td>
+                            <%= order.user_name || '(탈퇴) ' %><br>
+                            <small style="color:#888;"><%= order.username || '' %></small>
+                        </td>
+                        <td>
+                            <%= order.receiver_name || '-' %><br>
+                            <small style="color:#888;"><%= order.receiver_phone || '' %></small>
+                        </td>
+                        <td class="col-date" style="font-size:13px;"><%= order.created_at %></td>
+                        <td><strong style="color:#2563eb;">₩<%= order.total_amount.toLocaleString() %></strong></td>
+                        <td>
+                            <form action="admin/orders/status/<%= order.id %>" method="POST" 
+                                  style="display:flex; gap:6px; margin:0;">
+                                <select name="status" style="flex:1; margin:0; padding:6px;">
+                                    <option value="주문완료" <%= order.status === '주문완료' ? 'selected' : '' %>>⏳ 주문완료</option>
+                                    <option value="배송준비" <%= order.status === '배송준비' ? 'selected' : '' %>>📦 배송준비</option>
+                                    <option value="배송중" <%= order.status === '배송중' ? 'selected' : '' %>>🚚 배송중</option>
+                                    <option value="배송완료" <%= order.status === '배송완료' ? 'selected' : '' %>>✅ 배송완료</option>
+                                    <option value="주문취소" <%= order.status === '주문취소' ? 'selected' : '' %>>❌ 주문취소</option>
+                                    <option value="반품요청" <%= order.status === '반품요청' ? 'selected' : '' %>>🔄 반품요청</option>
+                                    <option value="반품완료" <%= order.status === '반품완료' ? 'selected' : '' %>>↩️ 반품완료</option>
+                                </select>
+                                <button type="submit" style="margin:0; padding: 6px 12px; font-size:13px;">변경</button>
+                            </form>
+                        </td>
+                    </tr>
+                <% }) %>
+            </tbody>
+        </table>
+    <% } %>
+</div>
+
+<%- include('partials/footer') %>

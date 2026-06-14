@@ -1,0 +1,41 @@
+<%- include('partials/header', { pageTitle: post ? '공지 수정' : '공지 작성' }) %>
+
+<div class="container" style="max-width: 700px;">
+    <h2><%= post ? '✏️ 공지사항 수정' : '✏️ 공지사항 작성' %></h2>
+
+    <form action="<%= post ? '/notice/edit/' + post.id : '/notice/new' %>" 
+          method="post" enctype="multipart/form-data">
+
+        <label for="title">제목 <span style="color:red;">*</span></label>
+        <input type="text" id="title" name="title" value="<%= post ? post.title : '' %>" required>
+
+        <label for="content">내용 <span style="color:red;">*</span></label>
+        <textarea id="content" name="content" required><%= post ? post.content : '' %></textarea>
+
+        <label for="attachments">📎 파일 첨부 (최대 5개, 각 10MB)</label>
+        <input type="file" id="attachments" name="attachments" multiple>
+
+        <% if (post && files && files.length > 0) { %>
+            <div style="margin: 12px 0; padding: 10px; background:#f9f9f9; border-radius:5px;">
+                <strong>현재 첨부파일:</strong>
+                <ul style="margin: 6px 0 0; padding-left: 18px;">
+                    <% files.forEach(f => { %>
+                        <li>
+                            📄 <%= f.originalname %> (<%= (f.filesize/1024).toFixed(1) %> KB)
+                            <a href="notice/file/delete/<%= f.id %>" 
+                               onclick="return confirm('이 파일을 삭제할까요?');"
+                               style="color:#ef4444; margin-left: 6px;">[삭제]</a>
+                        </li>
+                    <% }) %>
+                </ul>
+            </div>
+        <% } %>
+
+        <div style="display: flex; gap: 10px; margin-top: 16px;">
+            <button type="submit"><%= post ? '수정 완료' : '등록' %></button>
+            <a href="notice" class="btn btn-secondary">취소</a>
+        </div>
+    </form>
+</div>
+
+<%- include('partials/footer') %>
